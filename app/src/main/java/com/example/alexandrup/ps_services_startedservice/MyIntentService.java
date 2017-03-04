@@ -2,19 +2,21 @@ package com.example.alexandrup.ps_services_startedservice;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.support.annotation.Nullable;
+import android.os.Bundle;
+import android.os.ResultReceiver;
 import android.util.Log;
 
 /**
  * Created by alexandrup on 3/4/2017.
  */
 
+// Intent Service Demo
 public class MyIntentService extends IntentService {
 
-    public static final String TAG = MyIntentService.class.getSimpleName();
+    private static final String TAG = MyIntentService.class.getSimpleName();
 
     public MyIntentService() {
-        super("MyWorkerThread"); //give the name of the worker thread
+        super("MyWorkerThread"); // Give the name to the worker thread
     }
 
     @Override
@@ -24,24 +26,30 @@ public class MyIntentService extends IntentService {
     }
 
     @Override
-    protected void onHandleIntent(@Nullable Intent intent) {
+    protected void onHandleIntent(Intent intent) {
         Log.i(TAG, "onHandleIntent, Thread name: " + Thread.currentThread().getName());
 
         int sleepTime = intent.getIntExtra("sleepTime", 1);
 
+        ResultReceiver resultReceiver = intent.getParcelableExtra("receiver");
+
         int ctr = 1;
 
-        while (ctr <= sleepTime) {
-            Log.i(TAG, "Counter is now " + ctr); //publish progress triggers onProgressUpdate
+        // Dummy Long Operation
+        while(ctr <= sleepTime) {
+            Log.i(TAG, "Counter is now " + ctr);
 
             try {
-                Thread.sleep(sleepTime * 1000);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             ctr++;
         }
 
+        Bundle bundle = new Bundle();
+        bundle.putString("resultIntentService", "Counter stopped at " + ctr + " seconds");
+        resultReceiver.send(18, bundle);
     }
 
     @Override
@@ -50,3 +58,4 @@ public class MyIntentService extends IntentService {
         Log.i(TAG, "onDestroy, Thread name: " + Thread.currentThread().getName());
     }
 }
+
