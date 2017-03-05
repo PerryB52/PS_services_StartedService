@@ -14,21 +14,12 @@ import android.widget.Toast;
 
 public class MyStartedService extends Service {
 
-            /*
-        started servuce runs on UI Thread independent of calling component(activity in this case)
-        May block the UI if executed for longer duration
-        used to return single task that does not return anything
-        Started service can receive data through an intent but cannot return data back
-            u need to use BoundService or BroadcastReceiver to receive data back.
-         */
-
-    public static final String TAG = MyStartedService.class.getSimpleName();
+    private static final String TAG = MyStartedService.class.getSimpleName();
 
     @Override
     public void onCreate() {
-
-        Log.i(TAG, "onCreate, Thread name " + Thread.currentThread().getName());
         super.onCreate();
+        Log.i(TAG, "onCreate, Thread name " + Thread.currentThread().getName());
     }
 
     @Override
@@ -36,19 +27,13 @@ public class MyStartedService extends Service {
 
         Log.i(TAG, "onStartCommand, Thread name " + Thread.currentThread().getName());
 
-        //perform test dummy long running task
+        // Perform Tasks [ Short Duration Task: Don't block the UI ]
+
         int sleepTime = intent.getIntExtra("sleepTime", 1);
-//        try {
-//            Thread.sleep(sleepTime*1000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
 
         new MyAsyncTask().execute(sleepTime);
 
-
-        return START_STICKY; //or START_REDELIVER_INTENT etc --> this sets behavior for what to do when sservice is destroyed
-        //return super.onStartCommand(intent, flags, startId);
+        return START_STICKY;
     }
 
     @Nullable
@@ -56,50 +41,48 @@ public class MyStartedService extends Service {
     public IBinder onBind(Intent intent) {
 
         Log.i(TAG, "onBind, Thread name " + Thread.currentThread().getName());
-        //if service is started service always return null
         return null;
     }
 
     @Override
     public void onDestroy() {
+        super.onDestroy();
 
         Log.i(TAG, "onDestroy, Thread name " + Thread.currentThread().getName());
-        super.onDestroy();
     }
 
-    class MyAsyncTask extends AsyncTask<Integer, String, Void> {
+    class MyAsyncTask extends AsyncTask<Integer, String, String> {
 
-        public final String TAG = MyAsyncTask.class.getSimpleName();
-
+        private final String TAG = MyAsyncTask.class.getSimpleName();
 
         @Override
         protected void onPreExecute() {
+            super.onPreExecute();
 
             Log.i(TAG, "onPreExecute, Thread name " + Thread.currentThread().getName());
-            super.onPreExecute();
         }
 
-        @Override //perform long running task here - works on different thread
-        protected Void doInBackground(Integer... params) {
+        @Override // Perform our Long Running Task
+        protected String doInBackground(Integer... params) {
             Log.i(TAG, "doInBackground, Thread name " + Thread.currentThread().getName());
 
             int sleepTime = params[0];
 
             int ctr = 1;
 
-            while (ctr <= sleepTime) {
-                publishProgress("Counter is now " + ctr); //publish progress triggers onProgressUpdate
+            // Dummy Long Operation
+            while(ctr <= sleepTime) {
+                publishProgress("Counter is now " + ctr);
 
                 try {
-                    Thread.sleep(sleepTime * 1000);
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 ctr++;
             }
 
-
-            return null;
+            return "Counter Stopped at " + ctr + " seconds";
         }
 
         @Override
@@ -107,17 +90,19 @@ public class MyStartedService extends Service {
             super.onProgressUpdate(values);
 
             Toast.makeText(MyStartedService.this, values[0], Toast.LENGTH_SHORT).show();
-            Log.i(TAG, "onProgressUpdate, Thread name " + Thread.currentThread().getName());
-
-
+            Log.i(TAG, "Counter Value " + values[0]+ " onProgressUpdate, Thread name " + Thread.currentThread().getName());
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
+        protected void onPostExecute(String str) {
+            super.onPostExecute(str);
 
-            stopSelf(); //stops service by itself
+            stopSelf(); // Destroy the Service from within the Service class itself
             Log.i(TAG, "onPostExecute, Thread name " + Thread.currentThread().getName());
-            super.onPostExecute(aVoid);
+
+            Intent intent = new Intent("action.service.to.activity");
+            intent.putExtra("startServiceResult", str);
+            sendBroadcast(intent);
         }
     }
 }

@@ -1,6 +1,9 @@
 package com.example.alexandrup.ps_services_startedservice;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
@@ -25,19 +28,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startStartedService(View view) {
-        /*
-        started servuce runs on UI Thread independent of calling component(activity in this case)
-        May block the UI if executed for longer duration
-        used to return single task that does not return anything
-        Started service can receive data through an intent but cannot return data back
-            u need to use BoundService or BroadcastReceiver to receive data back.
-         */
+
         Intent intent = new Intent(MainActivity.this, MyStartedService.class);
         intent.putExtra("sleepTime", 10);
         startService(intent);
     }
 
     public void stopStartedService(View view) {
+
         Intent intent = new Intent(MainActivity.this, MyStartedService.class);
         stopService(intent);
     }
@@ -46,13 +44,39 @@ public class MainActivity extends AppCompatActivity {
 
         ResultReceiver myResultReceiver = new MyResultReceiver(null);
 
-        Intent intent = new Intent(MainActivity.this, MyIntentService.class);
-        intent.putExtra("sleepTime", 3);
+        Intent intent = new Intent(this, MyIntentService.class);
+        intent.putExtra("sleepTime", 10);
         intent.putExtra("receiver", myResultReceiver);
         startService(intent);
-
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("action.service.to.activity");
+        registerReceiver(myStartedServiceReceiver, intentFilter);
+    }
+
+    // To receive the data back from MyStartedService.java using BroadcastReceiver
+    private BroadcastReceiver myStartedServiceReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            String result = intent.getStringExtra("startServiceResult");
+            txvStartedServiceResult.setText(result);
+        }
+    };
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        unregisterReceiver(myStartedServiceReceiver);
+    }
+
+    // To receive the data back from MyIntentService.java using ResultReceiver
     private class MyResultReceiver extends ResultReceiver {
 
         public MyResultReceiver(Handler handler) {
@@ -79,6 +103,4 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
-
 }
