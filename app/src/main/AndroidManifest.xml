@@ -18,6 +18,9 @@
 
         <service android:name=".MyStartedService" />
         <service android:name=".MyIntentService" />
+
+        <activity android:name=".SecondActivity" />
+        <service android:name=".MyBoundService" />
     </application>
 
 </manifest>

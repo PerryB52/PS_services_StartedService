@@ -76,6 +76,13 @@ public class MainActivity extends AppCompatActivity {
         unregisterReceiver(myStartedServiceReceiver);
     }
 
+    public void moveToSecondActiv(View view) {
+
+        Intent i = new Intent(MainActivity.this, SecondActivity.class);
+        startActivity(i);
+
+    }
+
     // To receive the data back from MyIntentService.java using ResultReceiver
     private class MyResultReceiver extends ResultReceiver {
 
