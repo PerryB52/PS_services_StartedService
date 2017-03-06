@@ -1,4 +1,4 @@
-package com.example.alexandrup.ps_services_startedservice;
+package com.example.alexandrup.ps_services_startedservice.services;
 
 import android.app.Service;
 import android.content.Intent;
@@ -15,7 +15,7 @@ public class MyBoundService extends Service {
     private MyLocalBinder myLocalBinder = new MyLocalBinder();
 
     public class MyLocalBinder extends Binder{
-        MyBoundService getService(){
+        public MyBoundService getService(){
             return MyBoundService.this;
         }
     }

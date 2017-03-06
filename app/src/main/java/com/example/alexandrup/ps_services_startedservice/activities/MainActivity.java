@@ -1,4 +1,4 @@
-package com.example.alexandrup.ps_services_startedservice;
+package com.example.alexandrup.ps_services_startedservice.activities;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,6 +11,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
+import com.example.alexandrup.ps_services_startedservice.services.MyIntentService;
+import com.example.alexandrup.ps_services_startedservice.services.MyStartedService;
+import com.example.alexandrup.ps_services_startedservice.R;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -78,9 +82,14 @@ public class MainActivity extends AppCompatActivity {
 
     public void moveToSecondActiv(View view) {
 
-        Intent i = new Intent(MainActivity.this, SecondActivity.class);
+        Intent i = new Intent(MainActivity.this, MyBoundActivity.class);
         startActivity(i);
 
+    }
+
+    public void moveToMessengerActivity(View view) {
+        Intent i = new Intent(MainActivity.this, MyMessengerActivity.class);
+        startActivity(i);
     }
 
     // To receive the data back from MyIntentService.java using ResultReceiver

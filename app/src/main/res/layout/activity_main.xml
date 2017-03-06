@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="20dp"
-    tools:context=".MainActivity">
+    tools:context=".activities.MainActivity">
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -62,10 +62,20 @@
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
         android:text="Move to second activity"
-        android:onClick="moveToSecondActiv"/>
+        android:onClick="moveToSecondActiv"
+        android:layout_marginBottom="45dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/btnMessengerActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Move to Messenger Activity"
+        android:onClick="moveToMessengerActivity"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
 
 </RelativeLayout>

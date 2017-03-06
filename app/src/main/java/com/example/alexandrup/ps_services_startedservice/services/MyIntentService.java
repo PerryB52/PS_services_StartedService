@@ -1,4 +1,4 @@
-package com.example.alexandrup.ps_services_startedservice;
+package com.example.alexandrup.ps_services_startedservice.services;
 
 import android.app.IntentService;
 import android.content.Intent;

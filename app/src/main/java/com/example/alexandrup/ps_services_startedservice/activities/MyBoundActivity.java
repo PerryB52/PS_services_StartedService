@@ -1,4 +1,4 @@
-package com.example.alexandrup.ps_services_startedservice;
+package com.example.alexandrup.ps_services_startedservice.activities;
 
 import android.content.ComponentName;
 import android.content.Intent;
@@ -11,13 +11,16 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.alexandrup.ps_services_startedservice.services.MyBoundService;
+import com.example.alexandrup.ps_services_startedservice.R;
+
 /**
  * Created by alexandrup on 3/5/2017.
  */
 
-public class SecondActivity extends AppCompatActivity {
+public class MyBoundActivity extends AppCompatActivity {
 
-    public static final String TAG = SecondActivity.class.getSimpleName();
+    public static final String TAG = MyBoundActivity.class.getSimpleName();
 
     boolean isBound = false;
     private MyBoundService myBoundService;
@@ -50,6 +53,13 @@ public class SecondActivity extends AppCompatActivity {
 
         //bound service is started in onStart
         Intent intent = new Intent(this, MyBoundService.class);
+        /* varius flags exist, this flag automatically creates the service as long as
+            components are bound to it.
+            BIND_DEBUG_UNBIND - creates debug information for nmatched bind/unbind calls
+            BIND_NOT_FOREGROUND - bound service will never be brought to foreground process level
+            0 - non of the above
+            many other...
+         */
         bindService(intent, mConnection, BIND_AUTO_CREATE);
     }
 
