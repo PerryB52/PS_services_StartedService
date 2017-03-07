@@ -16,14 +16,13 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".services.MyStartedService" />
+        <service android:name=".services.MyStartedService"/>
         <service android:name=".services.MyIntentService" />
-
-        <activity android:name=".activities.MyBoundActivity" />
         <service android:name=".services.MyBoundService" />
+        <service android:name=".services.MyMessengerService" android:process=":my_own_process"/>
 
-        <activity android:name=".activities.MyMessengerActivity" />
-        <service android:name=".services.MyMessengerService" android:process=":my_own_process" />
+        <activity android:name=".activities.MyBoundActivity"/>
+        <activity android:name=".activities.MyMessengerActivity"/>
     </application>
 
 </manifest>
